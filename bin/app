@@ -1,0 +1,52 @@
+#! /usr/bin/env node
+
+const program = require('commander')
+const inquirer = require('inquirer')
+const chalk = require('chalk')
+const {createVueComponent} = require('../model/create-vue');
+const {getEntries} = require('../build/utils');
+const build = require('../build/build');
+
+program
+    .command('build')
+    .alias('b')
+    .description('打包模块')
+    .option('-a, --page [moduleName]', '模块名称')
+    .action(async option => {
+        const modules = await getEntries()
+        inquirer.prompt([
+            {
+                type: 'checkbox',
+                name: 'modes',
+                message: '你想编译哪些模块呢？',
+                choices: modules.map(({name}) => ({name, value: name}))
+            }
+        ]).then(async function (answers) {
+            build(modules.filter(it => answers.modes.includes(it.name)))
+        })
+
+    });
+
+program.command('create')
+    .alias('c')
+    .description('创建新模块')
+    .option('-a --name [moduleName] --className [module className]', '模块名称')
+    .action(() => {
+        inquirer.prompt([
+            {
+                type: 'input',
+                name: 'name',
+                message: '请输入组件名称'
+            },
+            {
+                type: 'input',
+                name: 'className',
+                message: '请输入组件类名'
+            }
+        ]).then(async function (answers) {
+            await createVueComponent(answers)
+        })
+    })
+
+program.parse(process.argv)
+// export PATH="$PATH:/usr/local/Cellar/node/11.9.0/bin"

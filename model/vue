@@ -1,0 +1,24 @@
+<template>
+    <div class="$className$">
+    </div>
+</template>
+
+<script>
+    export default {
+        name: '$name$',
+        components: {},
+        data() {
+            return {}
+        },
+        created() {
+        },
+        methods: {},
+        computed: {},
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+    .$className$ {
+    }
+</style>
